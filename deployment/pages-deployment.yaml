@@ -17,7 +17,7 @@ spec:
         app: pages
     spec:
       containers:
-        - image: direnu/pages:config
+        - image: direnu/pages:pipeline
           name: pages
           imagePullPolicy: Always
           ports:
