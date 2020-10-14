@@ -11,13 +11,13 @@ spec:
   selector:
     matchLabels:
       app: pages
-      tier: service
+      tier: monitor
   strategy: {}
   template:
     metadata:
       labels:
         app: pages
-        tier: service
+        tier: monitor
     spec:
       containers:
         - image: direnu/pages:monitor
