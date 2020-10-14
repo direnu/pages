@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   labels:
     app: pages
-    tier: monitor
+    tier: service
   name: pages
   namespace: omega
 spec:
@@ -11,13 +11,13 @@ spec:
   selector:
     matchLabels:
       app: pages
-      tier: monitor
+      tier: service
   strategy: {}
   template:
     metadata:
       labels:
         app: pages
-        tier: monitor
+        tier: service
     spec:
       containers:
         - image: direnu/pages:monitor
@@ -40,30 +40,37 @@ spec:
                   name: mysql-pass
                   key: password
             - name: DEBUG
-                value: "true"
-                  - name: LOGGING_FILE_NAME
-                    value: "omega/logs/app.log"
-                  - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_WEB
-                    value: debug
-                  - name: LOGGING_LEVEL_ROOT
-                    value: debug
-                  - name: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
-                    value: "*"
-                volumeMounts:
-                  - name: node-dir
-                    mountPath: /omega
-                readinessProbe:
-                  tcpSocket:
-                    port: 8080
-                  initialDelaySeconds: 15
-                  periodSeconds: 30
-                livenessProbe:
-                  httpGet:
-                    path: /actuator/health
-                    port: 8080
-                  initialDelaySeconds: 15
-                  periodSeconds: 30
-            volumes:
-              - name: node-dir
-                hostPath:
-                  path: /omega
+              value: "true"
+            - name: LOGGING_FILE_NAME
+              value: "omega/logs/app.log"
+            - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_WEB
+              value: debug
+            - name: LOGGING_LEVEL_ROOT
+              value: debug
+            - name: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
+              value: "*"
+          volumeMounts:
+            - name: node-dir
+              mountPath: /omega
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 30
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 30
+          resources:
+            requests:
+              memory: 600Mi
+              cpu: 0.25
+            limits:
+              memory: 900Mi
+              cpu: 1
+      volumes:
+        - name: node-dir
+          hostPath:
+            path: /omega
