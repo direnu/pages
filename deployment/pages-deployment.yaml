@@ -20,7 +20,7 @@ spec:
         tier: service
     spec:
       containers:
-        - image: direnu/pages:monitor
+        - image: direnu/pages:availability
           name: pages
           ports:
             - containerPort: 8080
